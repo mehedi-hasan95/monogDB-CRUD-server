@@ -24,11 +24,20 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const collection = client.db("curd").collection("users");
+
+        //Display data in client
+        app.get('/users', async(req, res) => {
+          const query = {};
+          const cursor = collection.find(query);
+          const users = await cursor.toArray();
+          res.send (users);
+        })
+
+        // Get data from client
         app.post('/users', async(req, res) => {
           const user = req.body;
           const result = await collection.insertOne(user);
           res.send(result);
-          console.log(result);
         })
     }
     finally {
